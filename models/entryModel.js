@@ -17,6 +17,19 @@ const EntrySchema = new Schema({
         type: String,
 
     },
+    // pdf: {
+    //     type: String,
+    // },
+    images: [
+        {
+            public_id: {
+                type: String,
+            },
+            url: {
+                type: String
+            }
+        }
+    ],
     date: {
         type: Date, default: Date.now()
     }
