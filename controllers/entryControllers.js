@@ -1,13 +1,34 @@
 const Entry = require("../models/entryModel")
+const cloudinary = require("../helpers/cloudinary")
 
 
 const createEntry = async (req, res) => {
 
-    const newEntryDetails = new Entry(req.body)
+    const body = req.body
 
     try {
+        let images = [...req.body.images]
+        let imagesBuffer = []
 
-        const newEntry = await newEntryDetails.save();
+        for (let i = 0; i < images.length; i++) {
+            const result = await cloudinary.uploader.upload(images[i], {
+                folder: "banners",
+                width: 1920,
+                crop: "scale"
+            });
+            imagesBuffer.push({
+                public_id: result.public_id,
+                url: result.secure_url
+            })
+
+        }
+        body.images = imagesBuffer;
+
+        const entry = new Entry(body)
+
+        const newEntry = await entry.save();
+
+        //const entry = await Entry.create(body)
         return res.status(201).json({
             ok: true,
             msg: "Entry created",
@@ -110,7 +131,7 @@ const updateEntry = async (req, res) => {
 
 const deleteEntry = async (req, res) => {
     const { _id } = req.body
-
+    console.log("id", _id)
     //check if entry exists
     const entryExists = await Entry.findOne({
         _id
