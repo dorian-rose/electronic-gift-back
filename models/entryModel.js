@@ -13,6 +13,10 @@ const EntrySchema = new Schema({
         type: String
 
     },
+    file: {
+        type: String
+
+    },
     password: {
         type: String,
 

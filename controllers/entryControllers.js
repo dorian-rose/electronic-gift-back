@@ -5,10 +5,15 @@ const cloudinary = require("../helpers/cloudinary")
 const createEntry = async (req, res) => {
 
     const body = req.body
-
+    const urlTitle = body.title.replace(/ /g, "_")
     try {
         let images = [...req.body.images]
         let imagesBuffer = []
+
+
+        const fileResult = await cloudinary.uploader.upload(body.file, { public_id: urlTitle }, function (error, result) { console.log(result, error); });
+        body.file = fileResult.url
+        console.log("file", body.file)
 
         for (let i = 0; i < images.length; i++) {
             const result = await cloudinary.uploader.upload(images[i], {
@@ -70,10 +75,10 @@ const getAllByUid = async (req, res) => {
 
 const getById = async (req, res) => {
     const { id } = req.params
-    console.log("id", id)
+
     try {
         const entry = await Entry.findById(id);
-        console.log("entries", entry)
+
         if (entry) {
             return res.status(200).json({
                 ok: true,
@@ -131,7 +136,7 @@ const updateEntry = async (req, res) => {
 
 const deleteEntry = async (req, res) => {
     const { _id } = req.body
-    console.log("id", _id)
+
     //check if entry exists
     const entryExists = await Entry.findOne({
         _id

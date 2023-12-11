@@ -1,5 +1,6 @@
 const express = require("express")
 
+const bodyParser = require('body-parser');
 //connect with mongodb
 const { connection } = require("./helpers/dbConect");
 
@@ -14,8 +15,13 @@ const port = process.env.PORT || 3000
 app.use(cors());
 
 //to parse JSON and URLENCODED req.bodies
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+// app.use(bodyParser.json({ limit: '100mb' }));
+// app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+//     limit: '100mb',
+//     extended: true
+// }));
 
 
 //set ejs folders virtually in public
