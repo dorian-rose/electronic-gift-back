@@ -12,7 +12,7 @@ const createEntry = async (req, res) => {
 
 
         const fileResult = await cloudinary.uploader.upload(body.file, { public_id: urlTitle }, function (error, result) { console.log(result, error); });
-        body.file = fileResult.url
+        body.file = fileResult.secure_url
         console.log("file", body.file)
 
         for (let i = 0; i < images.length; i++) {
